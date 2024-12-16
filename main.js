@@ -1,23 +1,37 @@
-main();
+import * as THREE from 'three';
+import { MMDPhysics } from 'three/addons/animation/MMDPhysics.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-//
-// start here
-//
-function main() {
-  const canvas = document.querySelector("#gl-canvas");
-  // Initialize the GL context
-  const gl = canvas.getContext("webgl");
+import {addMap} from './js/scene.js';
 
-  // Only continue if WebGL is available and working
-  if (gl === null) {
-    alert(
-      "Unable to initialize WebGL. Your browser or machine may not support it.",
-    );
-    return;
-  }
 
-  // Set clear color to black, fully opaque
-  gl.clearColor(0.0, 0.0, 0.0, 1.0);
-  // Clear the color buffer with specified clear color
-  gl.clear(gl.COLOR_BUFFER_BIT);
+const scene = addMap();
+
+
+
+const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize( window.innerWidth, window.innerHeight );
+document.body.appendChild( renderer.domElement );
+
+const controls = new OrbitControls( camera, renderer.domElement );
+
+
+
+
+
+camera.position.x = 0;
+camera.position.y = 0;
+camera.position.z = 20;
+
+controls.update();
+
+
+function animate() {
+	renderer.render( scene, camera );
+    // controls.update();
+
 }
+renderer.setAnimationLoop( animate );
