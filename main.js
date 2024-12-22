@@ -29,7 +29,7 @@ fpControls.verticalMax = 3;
 
 
 camera.position.set(0, 31, 20)
-camera.lookAt(new THREE.Vector3(1, 1, 20));
+//camera.lookAt(new THREE.Vector3(1, 1, 20));
 
 
 
@@ -42,6 +42,6 @@ function animate() {
     fpControls.update(delta);
     
     renderer.render( scene, camera );
-    
+    console.log(camera.position);
 }
 renderer.setAnimationLoop( animate );
