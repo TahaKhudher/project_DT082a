@@ -19,12 +19,12 @@ loader.load( 'scene.gltf', function ( gltf ) {
             if (child.isMesh) {
                 objects.push(child);
                 // Create a CANNON.Trimesh for the terrain
-                const vertices = child.geometry.attributes.position.array;
-                const indices = Array.from({ length: vertices.length / 3 }, (_, i) => i);
-                const trimesh = new CANNON.Trimesh(vertices, indices);
-                const terrainBody = new CANNON.Body({ mass: 0 });
-                terrainBody.addShape(trimesh);
-                world.addBody(terrainBody);
+                // const vertices = child.geometry.attributes.position.array;
+                // const indices = Array.from({ length: vertices.length / 3 }, (_, i) => i);
+                // const trimesh = new CANNON.Trimesh(vertices, indices);
+                // const terrainBody = new CANNON.Body({ mass: 0 });
+                // terrainBody.addShape(trimesh);
+                // world.addBody(terrainBody);
         }
         });
 

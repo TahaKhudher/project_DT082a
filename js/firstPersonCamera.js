@@ -16,12 +16,18 @@
 //     this.objects_ = objects;
 //     this.raycaster_ = new THREE.Raycaster();
 //     this.previousPosition_ = new THREE.Vector3();
+//     this.gravity_ = new THREE.Vector3(0, -9.82, 0); // Gravity vector
+//     this.velocity_ = new THREE.Vector3(); // Velocity vector
 //   }
 
 //   update(delta) {
 //     this.previousPosition_.copy(this.camera_.position);
+//         // Apply gravity
+//         this.velocity_.add(this.gravity_.clone().multiplyScalar(delta));
+//         this.camera_.position.add(this.velocity_.clone().multiplyScalar(delta));
+
+//         this.checkCollisions_();
 //     this.controls_.update(delta);
-//     this.checkCollisions_();
 //   }
 
 //   checkCollisions_() {
@@ -36,12 +42,12 @@
 //     }
 //   }
 // }
+
 import * as THREE from 'three';
-import * as CANNON from 'cannon';
 import { FirstPersonControls } from 'three/addons/controls/FirstPersonControls.js';
 
 export class FirstPersonCamera {
-  constructor(camera, renderer, objects, world) {
+  constructor(camera, renderer, objects) {
     this.camera_ = camera;
     this.renderer_ = renderer;
     this.domElement_ = this.renderer_.domElement;
@@ -53,75 +59,50 @@ export class FirstPersonCamera {
     this.controls_.verticalMin = 0.5;
     this.controls_.verticalMax = 3.0;
     this.objects_ = objects;
-    this.world_ = world;
     this.raycaster_ = new THREE.Raycaster();
     this.previousPosition_ = new THREE.Vector3();
-
-    // Create a physics body for the camera
-    this.cameraBody_ = new CANNON.Body({
-      mass: 1, // kg
-      position: new CANNON.Vec3(camera.position.x, camera.position.y, camera.position.z),
-      shape: new CANNON.Sphere(1.5) // radius of the sphere
-    });
-    this.world_.addBody(this.cameraBody_);
-
-    this.initControls_();
-  }
-
-  initControls_() {
-    window.addEventListener('keydown', (event) => this.onKeyDown_(event));
-    window.addEventListener('keyup', (event) => this.onKeyUp_(event));
-  }
-
-  onKeyDown_(event) {
-    switch (event.code) {
-      case 'KeyW':
-        this.cameraBody_.velocity.z = -5;
-        break;
-      case 'KeyS':
-        this.cameraBody_.velocity.z = 5;
-        break;
-      case 'KeyA':
-        this.cameraBody_.velocity.x = -5;
-        break;
-      case 'KeyD':
-        this.cameraBody_.velocity.x = 5;
-        break;
-    }
-  }
-
-  onKeyUp_(event) {
-    switch (event.code) {
-      case 'KeyW':
-      case 'KeyS':
-        this.cameraBody_.velocity.z = 0;
-        break;
-      case 'KeyA':
-      case 'KeyD':
-        this.cameraBody_.velocity.x = 0;
-        break;
-    }
+    this.gravity_ = new THREE.Vector3(0, -9.82, 0); // Gravity vector
+    this.velocity_ = new THREE.Vector3(); // Velocity vector
   }
 
   update(delta) {
-    this.world_.step(delta);
+    this.previousPosition_.copy(this.camera_.position);
 
-    // Update camera position based on physics body
-    this.camera_.position.copy(this.cameraBody_.position);
+    // Apply gravity
+    this.velocity_.add(this.gravity_.clone().multiplyScalar(delta));
+    this.camera_.position.add(this.velocity_.clone().multiplyScalar(delta));
+
+    this.checkCollisions_();
 
     this.controls_.update(delta);
-    this.checkCollisions_();
   }
 
   checkCollisions_() {
-    const direction = new THREE.Vector3();
-    this.camera_.getWorldDirection(direction);
+    // Check for ground collisions
+    const groundDirection = new THREE.Vector3(0, -1, 0); // Downward direction
+    this.raycaster_.set(this.camera_.position, groundDirection);
+    let intersects = this.raycaster_.intersectObjects(this.objects_, true);
 
-    this.raycaster_.set(this.camera_.position, direction);
-    const intersects = this.raycaster_.intersectObjects(this.objects_, true);
+    if (intersects.length > 0 && intersects[0].distance < 2) {
+      this.camera_.position.y = intersects[0].point.y + 2; // Adjust the camera's position to be above the ground
+      this.velocity_.y = 0; // Reset the vertical velocity
+    }
+
+    // Check for forward collisions
+    const forwardDirection = new THREE.Vector3();
+    this.camera_.getWorldDirection(forwardDirection);
+    this.raycaster_.set(this.camera_.position, forwardDirection);
+    intersects = this.raycaster_.intersectObjects(this.objects_, true);
 
     if (intersects.length > 0 && intersects[0].distance < 1) {
-      this.camera_.position.copy(this.previousPosition_); // Revert to previous position if collision detected
+      console.log('Collision detected:', intersects[0]);
+
+      // Revert to previous position if collision detected
+      this.camera_.position.copy(this.previousPosition_);
+      this.velocity_.set(0, 0, 0); // Stop the camera's movement
+      this.controls_.movementSpeed = 0; // Stop the controls' movement
+    } else {
+      this.controls_.movementSpeed = 10; // Restore the controls' movement speed if no collision
     }
   }
 }
