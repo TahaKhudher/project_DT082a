@@ -1,7 +1,8 @@
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as THREE from 'three';
+import * as CANNON from 'cannon';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-export function addMap() {
+export function addMap(objects, world) {
 const loader = new GLTFLoader();
 const scene = new THREE.Scene();
 
@@ -14,22 +15,21 @@ loader.load( 'scene.gltf', function ( gltf ) {
     var i = 0;
         root.traverse((child) => {
             // allObjects.push(child);
-            console.log(`Object name: ${child.name}, Type: ${child.type}`);
-            if (!child.isMesh) {
-                // Assign a random color
-                if(child.name.startsWith('Decor')) {
-                    // child.visible = false;
-                    console.log(child);
-                
-                const randomColor = new THREE.Color(Math.random(), Math.random(), Math.random());
-                // child.material = new THREE.MeshBasicMaterial({ color: randomColor });
-                child.color = new THREE.Color(Math.random(), Math.random(), Math.random());
-            }
+            // console.log(`Object name: ${child.name}, Type: ${child.type}`);
+            if (child.isMesh) {
+                objects.push(child);
+                // Create a CANNON.Trimesh for the terrain
+                const vertices = child.geometry.attributes.position.array;
+                const indices = Array.from({ length: vertices.length / 3 }, (_, i) => i);
+                const trimesh = new CANNON.Trimesh(vertices, indices);
+                const terrainBody = new CANNON.Body({ mass: 0 });
+                terrainBody.addShape(trimesh);
+                world.addBody(terrainBody);
         }
         });
 
 	scene.add( gltf.scene );
-    gltf.animations; // Array<THREE.AnimationClip>
+    gltf.animations; // Array<THREE.AnimationClip> 
     gltf.scene; // THREE.Group
     gltf.scenes; // Array<THREE.Group>
     gltf.cameras; // Array<THREE.Camera>
