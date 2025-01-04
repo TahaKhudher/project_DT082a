@@ -8,7 +8,7 @@ export class FirstPersonCamera {
     this.domElement_ = this.renderer_.domElement;
     this.controls_ = new FirstPersonControls(this.camera_, this.domElement_);
     this.controls_.lookSpeed = 0.5;
-    this.controls_.movementSpeed = 10;
+    this.controls_.movementSpeed = 3;
     this.controls_.autoForward = false;
     this.controls_.constrainVertical = true;
     this.controls_.verticalMin = 0.5;
@@ -58,7 +58,7 @@ export class FirstPersonCamera {
       this.velocity_.set(0, 0, 0); // Stop the camera's movement
       this.controls_.movementSpeed = 0; // Stop the controls' movement
     } else {
-      this.controls_.movementSpeed = 10; // Restore the controls' movement speed if no collision
+      this.controls_.movementSpeed = 5; // Restore the controls' movement speed if no collision
     }
   }
   }

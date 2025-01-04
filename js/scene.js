@@ -63,9 +63,9 @@ export function addMap(objects,mixers) {
     scene.add(spotLight);
   }
 
-  createSpotlight({ x: 0, y: 31.5, z: -1 }, { x: 0, y:2, z:20 }, 0xffffff, 10000, 0.1); // Red spotlight
+  createSpotlight({ x: 0, y: 31.5, z: -1 }, { x: 0, y:2, z:20 }, 0xffffff, 10500, 0.05); // Red spotlight
 
-  createSpotlight({ x: 0, y: 21.5, z: -1}, { x: 0, y: 30, z: -1 }, 0xffffff, 1500, 10); // Green spotlight
+  createSpotlight({ x: 0, y: 21.5, z: -1}, { x: 0, y: 30, z: -1 }, 0xffffff, 100, 10); // Green spotlight
 
   createSpotlight({ x: 16.5, y: 4.0, z: -4 }, { x: 16.5, y: 0, z: -4 }, 0xffffff, 15); // Green spotlight
   createSpotlight({ x: 16.5, y: 4.0, z: 7.8 }, { x: 16.5, y: 0, z: 7.8 }, 0xffffff, 15); // Blue spotlight
@@ -90,7 +90,7 @@ export function addMap(objects,mixers) {
   createSpotlight({ x: 45.18, y: 7.7, z: -9.3 }, { x: 45.18, y: 0, z: -9.3 }, 0xffffff, 15); // Blue spotlight
   createSpotlight({ x: 45.26, y: 7.7, z: -0.94 }, { x: 45.26, y: 0, z: -0.94 }, 0xffffff, 15); // Blue spotlight
 
-  const light = new THREE.AmbientLight( 0x404040 ); // soft white light
+  const light = new THREE.AmbientLight( 0xffffff ,0.05 ); // soft white light
   scene.add( light );
 
 
