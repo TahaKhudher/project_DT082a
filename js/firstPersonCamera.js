@@ -24,7 +24,6 @@ export class FirstPersonCamera {
 
     this.previousPosition_.copy(this.camera_.position);
 
-    // Apply gravity
     this.velocity_.add(this.gravity_.clone().multiplyScalar(delta));
     this.camera_.position.add(this.velocity_.clone().multiplyScalar(delta));
 
@@ -34,7 +33,6 @@ export class FirstPersonCamera {
   }
 
   checkCollisions_() {
-    // Check for ground collisions
     const groundDirection = new THREE.Vector3(0, -1, 0); // Downward direction
     this.raycaster_.set(this.camera_.position, groundDirection);
     let intersects = this.raycaster_.intersectObjects(this.objects_, true);
@@ -51,12 +49,12 @@ export class FirstPersonCamera {
     intersects = this.raycaster_.intersectObjects(this.objects_, true);
 
     if (intersects.length > 0 && intersects[0].distance < 1) {
-      console.log('Collision detected:', intersects[0]);
+      // console.log('Collision detected:', intersects[0]);
 
-      // Revert to previous position if collision detected
       this.camera_.position.copy(this.previousPosition_);
       this.velocity_.set(0, 0, 0); // Stop the camera's movement
       this.controls_.movementSpeed = 0; // Stop the controls' movement
+
     } else {
       this.controls_.movementSpeed = 5; // Restore the controls' movement speed if no collision
     }
