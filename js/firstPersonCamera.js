@@ -1,48 +1,3 @@
-// import * as THREE from 'three';
-// import { FirstPersonControls } from 'three/addons/controls/FirstPersonControls.js';
-
-// export class FirstPersonCamera {
-//   constructor(camera, renderer, objects) {
-//     this.camera_ = camera;
-//     this.renderer_ = renderer;
-//     this.domElement_ = this.renderer_.domElement;
-//     this.controls_ = new FirstPersonControls(this.camera_, this.domElement_);
-//     this.controls_.lookSpeed = 0.5;
-//     this.controls_.movementSpeed = 10;
-//     this.controls_.autoForward = false;
-//     this.controls_.constrainVertical = true;
-//     this.controls_.verticalMin = 0.5;
-//     this.controls_.verticalMax = 3.0;
-//     this.objects_ = objects;
-//     this.raycaster_ = new THREE.Raycaster();
-//     this.previousPosition_ = new THREE.Vector3();
-//     this.gravity_ = new THREE.Vector3(0, -9.82, 0); // Gravity vector
-//     this.velocity_ = new THREE.Vector3(); // Velocity vector
-//   }
-
-//   update(delta) {
-//     this.previousPosition_.copy(this.camera_.position);
-//         // Apply gravity
-//         this.velocity_.add(this.gravity_.clone().multiplyScalar(delta));
-//         this.camera_.position.add(this.velocity_.clone().multiplyScalar(delta));
-
-//         this.checkCollisions_();
-//     this.controls_.update(delta);
-//   }
-
-//   checkCollisions_() {
-//     const direction = new THREE.Vector3();
-//     this.camera_.getWorldDirection(direction);
-
-//     this.raycaster_.set(this.camera_.position, direction);
-//     const intersects = this.raycaster_.intersectObjects(this.objects_, true);
-
-//     if (intersects.length > 0 && intersects[0].distance < 1) {
-//       this.camera_.position.copy(this.previousPosition_); // Revert to previous position if collision detected
-//     }
-//   }
-// }
-
 import * as THREE from 'three';
 import { FirstPersonControls } from 'three/addons/controls/FirstPersonControls.js';
 
@@ -66,6 +21,7 @@ export class FirstPersonCamera {
   }
 
   update(delta) {
+
     this.previousPosition_.copy(this.camera_.position);
 
     // Apply gravity
@@ -105,4 +61,4 @@ export class FirstPersonCamera {
       this.controls_.movementSpeed = 10; // Restore the controls' movement speed if no collision
     }
   }
-}
+  }
