@@ -17,11 +17,8 @@ export function addMap(objects,mixers) {
       }
         i++;
     });
-
     scene.add(root);
-    console.log(scene);
 
-//    console.log(scene.children);
     const mixer = new THREE.AnimationMixer(gltf.scene);
     gltf.animations.forEach((clip) => {
         mixer.clipAction(clip).play();
